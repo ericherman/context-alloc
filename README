@@ -1,0 +1,58 @@
+Easy pluggable malloc / free scaffolding
+
+Usage
+-----
+
+Copy the src/easy-alloc.c and src/easy-alloc.h directly into your project.
+Rename them and adjust them to fit in with your project's name conventions.
+
+The "demo" directory shows an example usage, but in short the idea is for
+the default to use the standard libc malloc and free, but to make it easy
+to plug in a special allocator for test, thus allowing easier testing of
+Out Of Memory.
+
+In the code, rather than calling malloc and free directly, keep a function
+pointer to the allocation and freeing functions, perhaps by adding them to
+your struct:
+
+	struct foo_s {
+		easy_malloc_func alloc;
+		easy_free_func free;
+		void *mem_context;
+		...
+	};
+
+
+	struct foo_s *foo_new_custom_allocator(easy_malloc_func ealloc,
+	                                       easy_free_func efree,
+	                                       void *mem_context)
+	{
+		if (!ealloc || !efree) {
+			ealloc = easy_stdlib_malloc;
+			efree = easy_stdlib_free;
+			mem_context = NULL;
+		}
+		...
+	}
+
+	struct foo_s *foo_new(void)
+	{
+		return foo_new_custom_allocator(NULL, NULL, NULL);
+	}
+
+	void foo_bar(struct foo_s *foo, int bar)
+	{
+		char *buf = foo->alloc(foo->mem_context, BUF_LEN);
+		...
+	}
+
+
+License
+-------
+
+LGPL-3.0-or-later
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
