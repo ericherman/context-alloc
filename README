@@ -1,5 +1,11 @@
 Easy pluggable malloc / free scaffolding
 
+Description
+-----
+easy-alloc is a C library that simplifies writing tests for out-of-memory
+conditions. By introducing an indirection it grants the option to mock
+the alloctation and deallocation to finally get complete code coverage.
+
 Usage
 -----
 
