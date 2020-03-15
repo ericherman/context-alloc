@@ -1,0 +1,32 @@
+test-out-of-memory
+
+###################
+# backup files
+###################
+*.bak
+*.bck
+*cache.lib
+$*
+*.swp
+*.000
+*~
+
+################
+# Output files
+################
+*.o
+*.so
+*.so.*
+*.a
+*.bin
+*.d
+*.la
+*.lo
+*.log
+*.trs
+*.tar.*
+*.gch
+coverage_html/
+coverage.info
+*.gcda
+*.gcno
