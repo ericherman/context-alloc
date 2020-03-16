@@ -18,10 +18,16 @@ endif
 # extracted from https://github.com/torvalds/linux/blob/master/scripts/Lindent
 LINDENT=indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs -cp1 -il0
 
-test-out-of-memory: src/easy-alloc.h src/easy-alloc.c \
-			demo/foo.h demo/foo.c demo/test-out-of-memory.c
-	$(CC) $(CFLAGS) -Isrc/ -Idemo/ \
+test-out-of-memory: demo/test-out-of-memory.c \
+			src/easy-alloc.h \
+			src/easy-alloc.c \
+			util/oom-injecting-malloc.h \
+			util/oom-injecting-malloc.c \
+			demo/foo.h \
+			demo/foo.c
+	$(CC) $(CFLAGS) -Isrc/ -Iutil/ -Idemo/ \
 		src/easy-alloc.c \
+		util/oom-injecting-malloc.c \
 		demo/foo.c \
 		demo/test-out-of-memory.c \
 		-o test-out-of-memory
@@ -37,6 +43,7 @@ tidy:
 		-T int8_t -T int16_t -T int32_t -T int64_t \
 		-T uint8_t -T uint16_t -T uint32_t -T uint64_t \
 		demo/*.c demo/*.h \
+		util/*.c util/*.h \
 		src/*.c src/*.h
 
 check: test-out-of-memory
