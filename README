@@ -1,19 +1,19 @@
-Easy pluggable malloc / free scaffolding
+Context-aware pluggable malloc / free scaffolding
 
 Description
 -----
-easy-alloc is a C library that simplifies writing tests for out-of-memory
+context-alloc is a C library that simplifies writing tests for out-of-memory
 conditions. By introducing an indirection it grants the option to mock
 the alloctation and deallocation to finally get complete code coverage.
 
 Usage
 -----
 
-Copy the src/easy-alloc.c and src/easy-alloc.h directly into your project.
+Copy the src/context-alloc.c and src/context-alloc.h directly into your project.
 Rename them and adjust them to fit in with your project's name conventions.
 
 The "demo" directory shows an example usage, but in short the idea is for
-the default to use the standard libc malloc and free, but to make it easy
+the default to use the standard libc malloc and free, but to make it context
 to plug in a special allocator for test, thus allowing easier testing of
 Out Of Memory.
 
@@ -22,20 +22,20 @@ pointer to the allocation and freeing functions, perhaps by adding them to
 your struct:
 
 	struct foo_s {
-		easy_malloc_func alloc;
-		easy_free_func free;
+		context_malloc_func alloc;
+		context_free_func free;
 		void *mem_context;
 		...
 	};
 
 
-	struct foo_s *foo_new_custom_allocator(easy_malloc_func ealloc,
-	                                       easy_free_func efree,
+	struct foo_s *foo_new_custom_allocator(context_malloc_func ealloc,
+	                                       context_free_func efree,
 	                                       void *mem_context)
 	{
 		if (!ealloc || !efree) {
-			ealloc = easy_stdlib_malloc;
-			efree = easy_stdlib_free;
+			ealloc = context_stdlib_malloc;
+			efree = context_stdlib_free;
 			mem_context = NULL;
 		}
 		...

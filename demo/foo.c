@@ -13,8 +13,8 @@ struct foo_s {
 	struct foo_list_s *list;
 	int num;
 
-	easy_malloc_func alloc;
-	easy_free_func free;
+	context_malloc_func alloc;
+	context_free_func free;
 	void *mem_context;
 };
 
@@ -66,14 +66,14 @@ struct foo_s *foo_new(void)
 	return foo_new_custom_allocator(NULL, NULL, NULL);
 }
 
-struct foo_s *foo_new_custom_allocator(easy_malloc_func ealloc,
-				       easy_free_func efree, void *mem_context)
+struct foo_s *foo_new_custom_allocator(context_malloc_func ealloc,
+				       context_free_func efree, void *mem_context)
 {
 	assert((ealloc != NULL && efree != NULL)
 	       || (ealloc == NULL && efree == NULL));
 	if (!ealloc || !efree) {
-		ealloc = easy_stdlib_malloc;
-		efree = easy_stdlib_free;
+		ealloc = context_stdlib_malloc;
+		efree = context_stdlib_free;
 		mem_context = NULL;
 	}
 
@@ -100,7 +100,7 @@ void foo_free(struct foo_s *foo)
 		return;
 	}
 
-	easy_free_func efree = foo->free;
+	context_free_func efree = foo->free;
 	void *mem_context = foo->mem_context;
 
 	while (foo->list != NULL) {

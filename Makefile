@@ -19,14 +19,14 @@ endif
 LINDENT=indent -npro -kr -i8 -ts8 -sob -l80 -ss -ncs -cp1 -il0
 
 test-out-of-memory: demo/test-out-of-memory.c \
-			src/easy-alloc.h \
-			src/easy-alloc.c \
+			src/context-alloc.h \
+			src/context-alloc.c \
 			util/oom-injecting-malloc.h \
 			util/oom-injecting-malloc.c \
 			demo/foo.h \
 			demo/foo.c
 	$(CC) $(CFLAGS) -Isrc/ -Iutil/ -Idemo/ \
-		src/easy-alloc.c \
+		src/context-alloc.c \
 		util/oom-injecting-malloc.c \
 		demo/foo.c \
 		demo/test-out-of-memory.c \
