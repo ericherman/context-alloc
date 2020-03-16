@@ -2,7 +2,7 @@
 /* easy-alloc.c - malloc/free wrappers for a pluggable allocator */
 /* Copyright (C) 2016, 2019, 2020 Eric Herman <eric@freesa.org> */
 
-#include <easy-alloc.h>
+#include "easy-alloc.h"
 
 #if __STDC_HOSTED__
 

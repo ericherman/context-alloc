@@ -2,7 +2,7 @@
 /* oom-injecting-malloc.c */
 /* Copyright (C) 2016, 2019, 2020 Eric Herman <eric@freesa.org> */
 
-#include <oom-injecting-malloc.h>
+#include "oom-injecting-malloc.h"
 
 #include <stdio.h>
 #include <string.h>
