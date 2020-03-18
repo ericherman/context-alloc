@@ -18,6 +18,8 @@ typedef struct oom_injecting_context {
 	unsigned long attempts_to_fail_bitmask;
 } oom_injecting_context_s;
 
+void oom_injecting_context_init(oom_injecting_context_s *context);
+
 void *oom_injecting_malloc(void *context, size_t size);
 
 void oom_injecting_free(void *context, void *ptr);

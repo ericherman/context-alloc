@@ -25,16 +25,19 @@ int test_out_of_memory_loop(unsigned long malloc_fail_bitmask)
 	int failures = 0;
 	int err = 0;
 	size_t i, loops;
+	context_malloc_func ctx_alloc;
+	context_free_func ctx_free;
 	oom_injecting_context_s mctx;
 	foo_s *foo;
 	int rv_err;
 
-	memset(&mctx, 0, sizeof(oom_injecting_context_s));
+	ctx_alloc = oom_injecting_malloc;
+	ctx_free = oom_injecting_free;
+	oom_injecting_context_init(&mctx);
+
 	mctx.attempts_to_fail_bitmask = malloc_fail_bitmask;
 
-	foo =
-	    foo_new_custom_allocator(oom_injecting_malloc, oom_injecting_free,
-				     &mctx);
+	foo = foo_new_custom_allocator(ctx_alloc, ctx_free, &mctx);
 	if (!foo) {
 		++err;
 		if (!malloc_fail_bitmask) {

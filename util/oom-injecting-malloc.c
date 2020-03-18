@@ -8,6 +8,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+void oom_injecting_context_init(oom_injecting_context_s *context)
+{
+	memset(context, 0x00, sizeof(oom_injecting_context_s));
+}
+
 void *oom_injecting_malloc(void *context, size_t size)
 {
 	oom_injecting_context_s *ctx = NULL;

@@ -71,8 +71,8 @@ can do something like:
 
 		ctx_alloc = oom_injecting_malloc;
 		ctx_free = oom_injecting_free;
+		oom_injecting_context_init(&mctx);
 
-		memset(&mctx, 0, sizeof(oom_injecting_context_s));
 		/* return NULL on the 4th call to malloc: */
 		mctx.attempts_to_fail_bitmask = 0x01 << 3;
 
