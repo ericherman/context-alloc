@@ -1,8 +1,9 @@
 default: check
 
 SHELL=/bin/bash
+BROWSER=firefox
 
-CFLAGS += -g -Wall -Wextra -pedantic -Werror
+CFLAGS += -g -Wall -Wextra -pedantic -Werror --coverage
 
 ifdef DEBUG
 MAKEFILE_DEBUG=$(DEBUG)
@@ -12,7 +13,10 @@ endif
 ifeq ($(MAKEFILE_DEBUG),0)
 CFLAGS += -DNDEBUG -O2 -Wno-unused-parameter
 else
-CFLAGS += -DDEBUG -O0
+CFLAGS += -DDEBUG -O0 \
+	-fno-inline-small-functions \
+	-fkeep-inline-functions \
+	-fkeep-static-functions
 endif
 
 # extracted from https://github.com/torvalds/linux/blob/master/scripts/Lindent
@@ -32,6 +36,15 @@ test-out-of-memory: demo/test-out-of-memory.c \
 		demo/foo.c \
 		demo/test-out-of-memory.c \
 		-o test-out-of-memory
+
+line-cov: check
+	lcov --capture --directory . --output-file coverage.info
+
+html-report: line-cov
+	genhtml coverage.info --output-directory coverage_html
+
+coverage: html-report
+	$(BROWSER) ./coverage_html/demo/foo.c.gcov.html
 
 clean:
 	rm -rf `cat .gitignore | sed -e 's/#.*//'`

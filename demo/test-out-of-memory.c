@@ -99,9 +99,64 @@ end_test_out_of_memory:
 	return failures;
 }
 
+int test_destroy_cleanup(void)
+{
+	int failures = 0;
+	context_malloc_func ctx_alloc;
+	context_free_func ctx_free;
+	oom_injecting_context_s mctx;
+	foo_s *foo;
+
+	ctx_alloc = oom_injecting_malloc;
+	ctx_free = oom_injecting_free;
+	oom_injecting_context_init(&mctx);
+
+	foo = foo_new_custom_allocator(ctx_alloc, ctx_free, &mctx);
+
+	failures += foo_a(foo);
+	failures += foo_a(foo);
+	failures += foo_a(foo);
+
+	failures += foo_b(foo);
+
+	foo_free(foo);
+
+	if (mctx.frees != mctx.allocs) {
+		logerror("frees != allocs (%lu != %lu)", mctx.frees,
+			 mctx.allocs);
+		++failures;
+	}
+	if (mctx.free_bytes != mctx.alloc_bytes) {
+		logerror("bytes freed != bytes alloc'd (%lu != %lu)",
+			 mctx.free_bytes, mctx.alloc_bytes);
+		++failures;
+	}
+	failures += (mctx.free_bytes == mctx.alloc_bytes ? 0 : 1);
+
+	return failures;
+}
+
+int test_default_constuctor_destructor(void)
+{
+	int failures = 0;
+	foo_s *foo = NULL;
+	foo = foo_new();
+	if (!foo) {
+		return 1;
+	}
+
+	foo_free(foo);
+
+	return failures;
+}
+
 int main(void)
 {
 	int i, failures = 0;
+
+	failures += test_default_constuctor_destructor();
+
+	failures += test_destroy_cleanup();
 
 	failures += test_out_of_memory_loop(0);
 	for (i = 0; i < 16; ++i) {

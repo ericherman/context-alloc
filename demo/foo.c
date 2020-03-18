@@ -4,6 +4,19 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifndef NDEBUG
+#ifndef Malloc_whine
+#define Malloc_whine(log, size) do { \
+	fprintf(log, "%s:%d alloc returned NULL for %zu bytes?\n", \
+		 __FILE__, __LINE__, size); \
+	} while (0)
+#endif
+#endif
+
+#ifndef Malloc_whine
+#define Malloc_whine(log, size) do { ((void)0); } while (0)
+#endif
+
 struct foo_list;
 typedef struct foo_list foo_list_s;
 struct foo_list {
@@ -31,12 +44,14 @@ int foo_a(foo_s *foo)
 	size_t size = sizeof(foo_list_s);
 	foo_list_s *node = foo->alloc(foo->mem_context, size);
 	if (!node) {
+		Malloc_whine(stdout, size);
 		return 1;
 	}
 
 	size = 1 + strlen(buf);
 	node->data = foo->alloc(foo->mem_context, size);
 	if (!node->data) {
+		Malloc_whine(stdout, size);
 		foo->free(foo->mem_context, node);
 		return 1;
 	}
@@ -82,6 +97,7 @@ foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
 	size_t size = sizeof(foo_s);
 	foo_s *foo = c_alloc(mem_context, size);
 	if (!foo) {
+		Malloc_whine(stdout, size);
 		return NULL;
 	}
 
@@ -108,6 +124,7 @@ void foo_free(foo_s *foo)
 	while (foo->list != NULL) {
 		foo_list_s *node = foo->list;
 		foo->list = node->next;
+		foo->free(foo->mem_context, node->data);
 		c_free(mem_context, node);
 	}
 

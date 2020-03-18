@@ -92,7 +92,14 @@ can do something like:
 In the "demo" directory, you can see a more complete example as
 described above.
 
-To run the demo, simply type "make" in the root of the project.
+To run the demo, simply type "make" in the root of the project,
+or to see more verbose output, build with DEBUG=1 like:
+	make clean
+	make DEBUG=1 check
+
+To get code coverage reporting, use:
+	make clean
+	make DEBUG=1 coverage
 
 
 License
