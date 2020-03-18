@@ -46,9 +46,46 @@ your struct:
 		return foo_new_custom_allocator(NULL, NULL, NULL);
 	}
 
-	void foo_bar(struct foo_s *foo, int bar)
+	/* return 0 on success or 1 on memory allocation failure */
+	int foo_bar(struct foo_s *foo, int bar)
 	{
 		char *buf = foo->alloc(foo->mem_context, BUF_LEN);
+		if (!buf) {
+			return 1;
+		}
+		...
+		return 0;
+	}
+
+The "util" directory in the project includes example allocators which
+allow easier testing of Out Of Memory conditions. In your tests, you
+can do something like:
+
+	int test_foo_new_oom(void)
+	{
+		struct foo_s *foo;
+		context_malloc_func ctx_alloc;
+		context_free_func ctx_free;
+		struct oom_injecting_context_s mctx;
+		int i, err;
+
+		ctx_alloc = oom_injecting_malloc;
+		ctx_free = oom_injecting_free;
+
+		memset(&mctx, 0, sizeof(struct oom_injecting_context_s));
+		/* return NULL on the 4th call to malloc: */
+		mctx.attempts_to_fail_bitmask = 0x01 << 3;
+
+		foo = foo_new_custom_allocator(ctx_malloc, ctx_free, &mctx);
+
+		for(i = 0; i < 10; ++i) {
+			err = foo_bar(foo, i);
+			if (err) {
+				/* malloc inside foo_bar() returned NULL */
+				/* maybe add more sanity checks here */
+				...
+			}
+		}
 		...
 	}
 
