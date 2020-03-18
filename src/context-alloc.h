@@ -10,8 +10,8 @@
 typedef void *(*context_malloc_func)(void *context, size_t size);
 typedef void *(*context_realloc_func)(void *context, void *ptr, size_t size);
 typedef void *(*context_calloc_func)(void *context, size_t nmemb, size_t size);
-typedef void *(*context_reallocarray_func)(void *context, void *ptr, size_t nmemb,
-					size_t size);
+typedef void *(*context_reallocarray_func)(void *context, void *ptr,
+					   size_t nmemb, size_t size);
 typedef void (*context_free_func)(void *context, void *ptr);
 
 #if __STDC_HOSTED__
@@ -19,7 +19,7 @@ void *context_stdlib_malloc(void *context, size_t size);
 void *context_stdlib_realloc(void *context, void *ptr, size_t size);
 void *context_stdlib_calloc(void *context, size_t nmemb, size_t size);
 void *context_stdlib_reallocarray(void *context, void *ptr, size_t nmemb,
-			       size_t size);
+				  size_t size);
 void context_stdlib_free(void *context, void *ptr);
 #endif /* __STDC_HOSTED__ */
 

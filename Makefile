@@ -25,7 +25,8 @@ test-out-of-memory: demo/test-out-of-memory.c \
 			util/oom-injecting-malloc.c \
 			demo/foo.h \
 			demo/foo.c
-	$(CC) $(CFLAGS) -Isrc/ -Iutil/ -Idemo/ \
+	$(CC) $(CFLAGS) \
+		-I./src -I./util -I./demo \
 		src/context-alloc.c \
 		util/oom-injecting-malloc.c \
 		demo/foo.c \

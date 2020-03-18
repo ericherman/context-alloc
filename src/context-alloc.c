@@ -28,7 +28,7 @@ void *context_stdlib_calloc(void *context, size_t nmemb, size_t size)
 }
 
 void *context_stdlib_reallocarray(void *context, void *ptr, size_t nmemb,
-			       size_t size)
+				  size_t size)
 {
 	assert(context == NULL);
 #if _GNU_SOURCE

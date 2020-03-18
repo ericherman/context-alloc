@@ -12,7 +12,8 @@ int foo_b(struct foo_s *foo);
 /* constructors */
 struct foo_s *foo_new(void);
 struct foo_s *foo_new_custom_allocator(context_malloc_func ealloc,
-				       context_free_func efree, void *mem_context);
+				       context_free_func efree,
+				       void *mem_context);
 
 /* destructors */
 void foo_free(struct foo_s *foo);
