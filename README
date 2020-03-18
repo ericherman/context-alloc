@@ -89,6 +89,11 @@ can do something like:
 		...
 	}
 
+In the "demo" directory, you can see a more complete example as
+described above.
+
+To run the demo, simply type "make" in the root of the project.
+
 
 License
 -------
