@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 
-struct oom_injecting_context_s {
+typedef struct oom_injecting_context {
 	unsigned long allocs;
 	unsigned long alloc_bytes;
 	unsigned long frees;
@@ -16,7 +16,7 @@ struct oom_injecting_context_s {
 	unsigned long max_used;
 	unsigned long attempts;
 	unsigned long attempts_to_fail_bitmask;
-};
+} oom_injecting_context_s;
 
 void *oom_injecting_malloc(void *context, size_t size);
 

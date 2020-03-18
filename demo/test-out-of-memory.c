@@ -25,11 +25,11 @@ int test_out_of_memory_loop(unsigned long malloc_fail_bitmask)
 	int failures = 0;
 	int err = 0;
 	size_t i, loops;
-	struct oom_injecting_context_s mctx;
+	oom_injecting_context_s mctx;
 	struct foo_s *foo;
 	int rv_err;
 
-	memset(&mctx, 0, sizeof(struct oom_injecting_context_s));
+	memset(&mctx, 0, sizeof(oom_injecting_context_s));
 	mctx.attempts_to_fail_bitmask = malloc_fail_bitmask;
 
 	foo =

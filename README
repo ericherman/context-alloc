@@ -29,13 +29,13 @@ your struct:
 	};
 
 
-	struct foo_s *foo_new_custom_allocator(context_malloc_func ealloc,
-	                                       context_free_func efree,
+	struct foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
+	                                       context_free_func c_free,
 	                                       void *mem_context)
 	{
-		if (!ealloc || !efree) {
-			ealloc = context_stdlib_malloc;
-			efree = context_stdlib_free;
+		if (!c_alloc || !c_free) {
+			c_alloc = context_stdlib_malloc;
+			c_free = context_stdlib_free;
 			mem_context = NULL;
 		}
 		...
@@ -66,13 +66,13 @@ can do something like:
 		struct foo_s *foo;
 		context_malloc_func ctx_alloc;
 		context_free_func ctx_free;
-		struct oom_injecting_context_s mctx;
+		oom_injecting_context_s mctx;
 		int i, err;
 
 		ctx_alloc = oom_injecting_malloc;
 		ctx_free = oom_injecting_free;
 
-		memset(&mctx, 0, sizeof(struct oom_injecting_context_s));
+		memset(&mctx, 0, sizeof(oom_injecting_context_s));
 		/* return NULL on the 4th call to malloc: */
 		mctx.attempts_to_fail_bitmask = 0x01 << 3;
 

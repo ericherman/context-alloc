@@ -10,13 +10,13 @@
 
 void *oom_injecting_malloc(void *context, size_t size)
 {
-	struct oom_injecting_context_s *ctx = NULL;
+	oom_injecting_context_s *ctx = NULL;
 	unsigned char *tracking_buffer = NULL;
 	void *ptr = NULL;
 	size_t used = 0;
 
 	ptr = NULL;
-	ctx = (struct oom_injecting_context_s *)context;
+	ctx = (oom_injecting_context_s *)context;
 	if (0x01 & (ctx->attempts_to_fail_bitmask >> ctx->attempts++)) {
 		return NULL;
 	}
@@ -47,11 +47,11 @@ void *oom_injecting_malloc(void *context, size_t size)
 
 void oom_injecting_free(void *context, void *ptr)
 {
-	struct oom_injecting_context_s *ctx = NULL;
+	oom_injecting_context_s *ctx = NULL;
 	unsigned char *tracking_buffer = NULL;
 	size_t size = 0;
 
-	ctx = (struct oom_injecting_context_s *)context;
+	ctx = (oom_injecting_context_s *)context;
 	if (ptr == NULL) {
 		++ctx->fails;
 		return;

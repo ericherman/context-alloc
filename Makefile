@@ -43,6 +43,7 @@ tidy:
 		-T FILE -T size_t -T ssize_t -T bool \
 		-T int8_t -T int16_t -T int32_t -T int64_t \
 		-T uint8_t -T uint16_t -T uint32_t -T uint64_t \
+		-T oom_injecting_context_s \
 		demo/*.c demo/*.h \
 		util/*.c util/*.h \
 		src/*.c src/*.h
