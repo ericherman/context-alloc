@@ -21,17 +21,17 @@ In the code, rather than calling malloc and free directly, keep a function
 pointer to the allocation and freeing functions, perhaps by adding them to
 your struct:
 
-	struct foo_s {
+	typedef struct foo {
 		context_malloc_func alloc;
 		context_free_func free;
 		void *mem_context;
 		...
-	};
+	} foo_s;
 
 
-	struct foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
-	                                       context_free_func c_free,
-	                                       void *mem_context)
+	foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
+	                                context_free_func c_free,
+	                                void *mem_context)
 	{
 		if (!c_alloc || !c_free) {
 			c_alloc = context_stdlib_malloc;
@@ -41,13 +41,13 @@ your struct:
 		...
 	}
 
-	struct foo_s *foo_new(void)
+	foo_s *foo_new(void)
 	{
 		return foo_new_custom_allocator(NULL, NULL, NULL);
 	}
 
 	/* return 0 on success or 1 on memory allocation failure */
-	int foo_bar(struct foo_s *foo, int bar)
+	int foo_bar(foo_s *foo, int bar)
 	{
 		char *buf = foo->alloc(foo->mem_context, BUF_LEN);
 		if (!buf) {
@@ -63,7 +63,7 @@ can do something like:
 
 	int test_foo_new_oom(void)
 	{
-		struct foo_s *foo;
+		foo_s *foo;
 		context_malloc_func ctx_alloc;
 		context_free_func ctx_free;
 		oom_injecting_context_s mctx;

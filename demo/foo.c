@@ -4,13 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 
-struct foo_list_s {
+struct foo_list;
+typedef struct foo_list foo_list_s;
+struct foo_list {
 	char *data;
-	struct foo_list_s *next;
+	foo_list_s *next;
 };
 
-struct foo_s {
-	struct foo_list_s *list;
+struct foo {
+	foo_list_s *list;
 	int num;
 
 	context_malloc_func alloc;
@@ -19,15 +21,15 @@ struct foo_s {
 };
 
 /* methods */
-int foo_a(struct foo_s *foo)
+int foo_a(foo_s *foo)
 {
 	assert(foo);
 
 	char buf[64];
 	snprintf(buf, 64, "%d", foo->num);
 
-	size_t size = sizeof(struct foo_list_s);
-	struct foo_list_s *node = foo->alloc(foo->mem_context, size);
+	size_t size = sizeof(foo_list_s);
+	foo_list_s *node = foo->alloc(foo->mem_context, size);
 	if (!node) {
 		return 1;
 	}
@@ -45,11 +47,11 @@ int foo_a(struct foo_s *foo)
 	return 0;
 }
 
-int foo_b(struct foo_s *foo)
+int foo_b(foo_s *foo)
 {
 	assert(foo);
 
-	struct foo_list_s *node = foo->list;
+	foo_list_s *node = foo->list;
 	if (node) {
 		foo->list = node->next;
 		foo->free(foo->mem_context, node->data);
@@ -61,14 +63,13 @@ int foo_b(struct foo_s *foo)
 }
 
 /* constructors */
-struct foo_s *foo_new(void)
+foo_s *foo_new(void)
 {
 	return foo_new_custom_allocator(NULL, NULL, NULL);
 }
 
-struct foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
-				       context_free_func c_free,
-				       void *mem_context)
+foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
+				context_free_func c_free, void *mem_context)
 {
 	assert((c_alloc != NULL && c_free != NULL)
 	       || (c_alloc == NULL && c_free == NULL));
@@ -78,8 +79,8 @@ struct foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
 		mem_context = NULL;
 	}
 
-	size_t size = sizeof(struct foo_s);
-	struct foo_s *foo = c_alloc(mem_context, size);
+	size_t size = sizeof(foo_s);
+	foo_s *foo = c_alloc(mem_context, size);
 	if (!foo) {
 		return NULL;
 	}
@@ -95,7 +96,7 @@ struct foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
 }
 
 /* destructors */
-void foo_free(struct foo_s *foo)
+void foo_free(foo_s *foo)
 {
 	if (!foo) {
 		return;
@@ -105,7 +106,7 @@ void foo_free(struct foo_s *foo)
 	void *mem_context = foo->mem_context;
 
 	while (foo->list != NULL) {
-		struct foo_list_s *node = foo->list;
+		foo_list_s *node = foo->list;
 		foo->list = node->next;
 		c_free(mem_context, node);
 	}
