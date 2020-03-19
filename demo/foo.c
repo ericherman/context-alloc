@@ -4,21 +4,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifndef NDEBUG
-#ifndef Malloc_whine
-#define Malloc_whine(log, size) do { \
-	fprintf(log, "%s:%d alloc returned NULL for %zu bytes?\n", \
-		 __FILE__, __LINE__, size); \
-	} while (0)
-#endif
-#endif
-
-#ifndef Malloc_whine
-#define Malloc_whine(log, size) do { ((void)0); } while (0)
-#endif
+#include "malloc-whine.h"
 
 struct foo_list;
 typedef struct foo_list foo_list_s;
+
 struct foo_list {
 	char *data;
 	foo_list_s *next;

@@ -3,7 +3,7 @@ default: check
 SHELL=/bin/bash
 BROWSER=firefox
 
-CFLAGS += -g -Wall -Wextra -pedantic -Werror --coverage
+CFLAGS += -g -Wall -Wextra -pedantic -Werror
 
 ifdef DEBUG
 MAKEFILE_DEBUG=$(DEBUG)
@@ -27,6 +27,7 @@ test-out-of-memory: demo/test-out-of-memory.c \
 			src/context-alloc.c \
 			util/oom-injecting-malloc.h \
 			util/oom-injecting-malloc.c \
+			demo/malloc-whine.h \
 			demo/foo.h \
 			demo/foo.c
 	$(CC) $(CFLAGS) \
@@ -35,7 +36,8 @@ test-out-of-memory: demo/test-out-of-memory.c \
 		util/oom-injecting-malloc.c \
 		demo/foo.c \
 		demo/test-out-of-memory.c \
-		-o test-out-of-memory
+		-o test-out-of-memory \
+		--coverage
 
 line-cov: check
 	lcov --capture --directory . --output-file coverage.info
