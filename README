@@ -18,8 +18,8 @@ to plug in a special allocator for test, thus allowing easier testing of
 Out Of Memory.
 
 In the code, rather than calling malloc and free directly, keep a function
-pointer to the allocation and freeing functions, perhaps by adding them to
-your struct:
+pointer to the allocation and freeing functions. Of course you can have
+these as global variables, or perhaps better by adding them to your struct:
 
 	typedef struct foo {
 		context_malloc_func alloc;
