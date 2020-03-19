@@ -99,8 +99,8 @@ above.
 To run the demo, simply type "make" in the root of the project, or to
 see more verbose output, build with DEBUG=1 like:
 
-	make clean make
-	DEBUG=1 check
+	make clean
+	make DEBUG=1 check
 
 To get code coverage reporting, use:
 
