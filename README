@@ -2,24 +2,28 @@ Context-aware pluggable malloc / free scaffolding
 
 Description
 -----
-context-alloc is a C library that simplifies writing tests for out-of-memory
-conditions. By introducing an indirection it grants the option to mock
-the alloctation and deallocation to finally get complete code coverage.
+"context-alloc" is a C library that simplifies writing tests for
+out-of-memory conditions. By introducing indirection it grants the
+option to mock alloctation and deallocation in tests to ensure that code
+behaves as expected in out-of-memory situations.
 
 Usage
 -----
 
-Copy the src/context-alloc.c and src/context-alloc.h directly into your project.
-Rename them and adjust them to fit in with your project's name conventions.
+Copy the src/context-alloc.h and src/context-alloc.c directly into your
+project.  Rename them and adjust them to fit in with your project's
+naming conventions.
 
-The "demo" directory shows an example usage, but in short the idea is for
-the default to use the standard libc malloc and free, but to make it context
-to plug in a special allocator for test, thus allowing easier testing of
-Out Of Memory.
+The "demo" directory contains an example of how to use context-alloc,
+but in short the idea is that by default the standard functions malloc
+and free are used, but alternatives may be plugged in, including a
+pointer to an object for context, thus allowing easier testing of memory
+exhaustion.
 
-In the code, rather than calling malloc and free directly, keep a function
-pointer to the allocation and freeing functions. Of course you can have
-these as global variables, or perhaps better by adding them to your struct:
+In the code, rather than calling malloc and free directly, keep a
+function pointer to the allocation and freeing functions. Of course you
+can have these as global variables, or better by adding them to your
+struct, perhaps a little like this:
 
 	typedef struct foo {
 		context_malloc_func alloc;
@@ -58,10 +62,10 @@ these as global variables, or perhaps better by adding them to your struct:
 	}
 
 The "util" directory in the project includes example allocators which
-allow easier testing of Out Of Memory conditions. In your tests, you
-can do something like:
+allow easier testing of Out Of Memory conditions. In your tests, you can
+do something like:
 
-	int test_foo_new_oom(void)
+	int test_foo_bar_oom(void)
 	{
 		foo_s *foo;
 		context_malloc_func ctx_alloc;
@@ -89,15 +93,17 @@ can do something like:
 		...
 	}
 
-In the "demo" directory, you can see a more complete example as
-described above.
+In the "demo" directory you can see a more complete example as described
+above.
 
-To run the demo, simply type "make" in the root of the project,
-or to see more verbose output, build with DEBUG=1 like:
-	make clean
-	make DEBUG=1 check
+To run the demo, simply type "make" in the root of the project, or to
+see more verbose output, build with DEBUG=1 like:
+
+	make clean make
+	DEBUG=1 check
 
 To get code coverage reporting, use:
+
 	make clean
 	make DEBUG=1 coverage
 
@@ -107,7 +113,7 @@ License
 
 LGPL-3.0-or-later
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version.
