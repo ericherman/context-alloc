@@ -2,8 +2,8 @@ Context-aware pluggable malloc / free scaffolding
 
 Description
 -----
-"context-alloc" is a C library that simplifies writing tests for
-out-of-memory conditions. By introducing indirection it grants the
+"context-alloc" is a C library intended to simplify writing unit tests
+for out-of-memory conditions. By introducing indirection, it grants the
 option to mock alloctation and deallocation in tests to ensure that code
 behaves as expected in out-of-memory situations.
 
