@@ -2,8 +2,8 @@
 /* context-alloc.h - interface for a pluggable allocator */
 /* Copyright (C) 2016, 2019, 2020 Eric Herman <eric@freesa.org> */
 
-#ifndef EASY_ALLOC_H
-#define EASY_ALLOC_H 1
+#ifndef CONTEXT_ALLOC_H
+#define CONTEXT_ALLOC_H 1
 
 #include <stddef.h>		/* size_t */
 
@@ -23,4 +23,4 @@ void *context_stdlib_reallocarray(void *context, void *ptr, size_t nmemb,
 void context_stdlib_free(void *context, void *ptr);
 #endif /* __STDC_HOSTED__ */
 
-#endif /* EASY_ALLOC_H */
+#endif /* CONTEXT_ALLOC_H */
