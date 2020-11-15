@@ -5,9 +5,18 @@
 #ifndef OOM_INJECTING_MALLOC_H
 #define OOM_INJECTING_MALLOC_H 1
 
-#include <stddef.h>
+#ifdef __cplusplus
+#define Oom_injecting_begin_C_functions extern "C" {
+#define Oom_injecting_end_C_functions }
+#else
+#define Oom_injecting_begin_C_functions
+#define Oom_injecting_end_C_functions
+#endif
 
-typedef struct oom_injecting_context {
+Oom_injecting_begin_C_functions
+#undef Oom_injecting_begin_C_functions
+#include <stddef.h>
+    typedef struct oom_injecting_context {
 	unsigned long allocs;
 	unsigned long alloc_bytes;
 	unsigned long frees;
@@ -33,4 +42,6 @@ extern void (*oom_injecting_errlog_s)(void *context, const char *str);
 extern void (*oom_injecting_errlog_z)(void *context, size_t z);
 extern void (*oom_injecting_errlog_eol)(void *context);
 
+Oom_injecting_end_C_functions
+#undef Oom_injecting_end_C_functions
 #endif /* OOM_INJECTING_MALLOC_H */

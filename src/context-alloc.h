@@ -5,8 +5,17 @@
 #ifndef CONTEXT_ALLOC_H
 #define CONTEXT_ALLOC_H 1
 
-#include <stddef.h>		/* size_t */
+#ifdef __cplusplus
+#define Context_alloc_begin_C_functions extern "C" {
+#define Context_alloc_end_C_functions }
+#else
+#define Context_alloc_begin_C_functions
+#define Context_alloc_end_C_functions
+#endif
 
+Context_alloc_begin_C_functions
+#undef Context_alloc_begin_C_functions
+#include <stddef.h>		/* size_t */
 typedef void *(*context_malloc_func)(void *context, size_t size);
 typedef void *(*context_realloc_func)(void *context, void *ptr, size_t size);
 typedef void *(*context_calloc_func)(void *context, size_t nmemb, size_t size);
@@ -27,4 +36,6 @@ extern void *(*stdlib_realloc)(void *ptr, size_t size);
 extern void *(*stdlib_calloc)(size_t nmemb, size_t size);
 extern void (*stdlib_free)(void *ptr);
 
+Context_alloc_end_C_functions
+#undef Context_alloc_end_C_functions
 #endif /* CONTEXT_ALLOC_H */
