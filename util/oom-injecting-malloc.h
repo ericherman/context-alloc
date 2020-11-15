@@ -24,4 +24,13 @@ void *oom_injecting_malloc(void *context, size_t size);
 
 void oom_injecting_free(void *context, void *ptr);
 
+/* function pointers to stdlib functions, set to non-NULL if freestanding */
+extern void *(*oom_injecting_memset)(void *s, int c, size_t n);
+extern void *(*oom_injecting_memcpy)(void *dest, const void *src, size_t n);
+
+extern void *oom_injecting_errlog_context;
+extern void (*oom_injecting_errlog_s)(void *context, const char *str);
+extern void (*oom_injecting_errlog_z)(void *context, size_t z);
+extern void (*oom_injecting_errlog_eol)(void *context);
+
 #endif /* OOM_INJECTING_MALLOC_H */
