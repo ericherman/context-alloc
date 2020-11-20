@@ -11,7 +11,7 @@ else
 MAKEFILE_DEBUG=0
 endif
 ifeq ($(MAKEFILE_DEBUG),0)
-CFLAGS += -DNDEBUG -O2 -Wno-unused-parameter
+CFLAGS += -DNDEBUG -O2
 else
 CFLAGS += -DDEBUG -O0 \
 	-fno-inline-small-functions \

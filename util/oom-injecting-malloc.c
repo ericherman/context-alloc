@@ -27,12 +27,7 @@ void *(*oom_injecting_memcpy)(void *dest, const void *src, size_t n) = memcpy;
 #include <stdio.h>
 FILE *oom_injecting_context_log(void *context)
 {
-	FILE *err = NULL;
-	if (oom_injecting_errlog_context) {
-		err = oom_injecting_errlog_context;
-	} else {
-		err = stderr;
-	}
+	FILE *err = (context) ? (FILE *)context : stderr;
 
 	/* avoid POSIX undefined stdout+stderr */
 	/* https://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_05_01 */
@@ -94,7 +89,7 @@ void *oom_injecting_malloc(void *context, size_t size)
 	if (0x01 & (ctx->attempts_to_fail_bitmask >> ctx->attempts++)) {
 		return NULL;
 	}
-	tracking_buffer = stdlib_malloc(sizeof(size_t) + size);
+	tracking_buffer = (unsigned char *)stdlib_malloc(sizeof(size_t) + size);
 	if (!tracking_buffer) {
 		++ctx->fails;
 		return NULL;

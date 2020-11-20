@@ -32,14 +32,14 @@ int foo_a(foo_s *foo)
 	snprintf(buf, 64, "%d", foo->num);
 
 	size_t size = sizeof(foo_list_s);
-	foo_list_s *node = foo->alloc(foo->mem_context, size);
+	foo_list_s *node = (foo_list_s *)foo->alloc(foo->mem_context, size);
 	if (!node) {
 		Malloc_whine(stdout, size);
 		return 1;
 	}
 
 	size = 1 + strlen(buf);
-	node->data = foo->alloc(foo->mem_context, size);
+	node->data = (char *)foo->alloc(foo->mem_context, size);
 	if (!node->data) {
 		Malloc_whine(stdout, size);
 		foo->free(foo->mem_context, node);
@@ -85,7 +85,7 @@ foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
 	}
 
 	size_t size = sizeof(foo_s);
-	foo_s *foo = c_alloc(mem_context, size);
+	foo_s *foo = (foo_s *)c_alloc(mem_context, size);
 	if (!foo) {
 		Malloc_whine(stdout, size);
 		return NULL;
