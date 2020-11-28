@@ -1,21 +1,22 @@
-#ifndef FOO_H
-#define FOO_H 1
+#ifndef DEMO_OBJECT_H
+#define DEMO_OBJECT_H 1
 
 #include <context-alloc.h>
 
-struct foo;
-typedef struct foo foo_s;
+struct demo_object;
+typedef struct demo_object demo_object_s;
 
 /* methods */
-int foo_a(foo_s *foo);
-int foo_b(foo_s *foo);
+int demo_object_a(demo_object_s *demo_object);
+int demo_object_b(demo_object_s *demo_object);
 
 /* constructors */
-foo_s *foo_new(void);
-foo_s *foo_new_custom_allocator(context_malloc_func ealloc,
-				context_free_func efree, void *mem_context);
+demo_object_s *demo_object_new(void);
+demo_object_s *demo_object_new_custom_allocator(context_malloc_func ealloc,
+						context_free_func efree,
+						void *mem_context);
 
 /* destructors */
-void foo_free(foo_s *foo);
+void demo_object_free(demo_object_s *demo_object);
 
-#endif /* FOO_H */
+#endif /* DEMO_OBJECT_H */

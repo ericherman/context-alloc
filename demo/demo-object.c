@@ -6,16 +6,16 @@
 
 #include "malloc-whine.h"
 
-struct foo_list;
-typedef struct foo_list foo_list_s;
+struct demo_object_list;
+typedef struct demo_object_list demo_object_list_s;
 
-struct foo_list {
+struct demo_object_list {
 	char *data;
-	foo_list_s *next;
+	demo_object_list_s *next;
 };
 
-struct foo {
-	foo_list_s *list;
+struct demo_object {
+	demo_object_list_s *list;
 	int num;
 
 	context_malloc_func alloc;
@@ -24,57 +24,60 @@ struct foo {
 };
 
 /* methods */
-int foo_a(foo_s *foo)
+int demo_object_a(demo_object_s *demo_object)
 {
-	assert(foo);
+	assert(demo_object);
 
 	char buf[64];
-	snprintf(buf, 64, "%d", foo->num);
+	snprintf(buf, 64, "%d", demo_object->num);
 
-	size_t size = sizeof(foo_list_s);
-	foo_list_s *node = (foo_list_s *)foo->alloc(foo->mem_context, size);
+	size_t size = sizeof(demo_object_list_s);
+	demo_object_list_s *node =
+	    (demo_object_list_s *)demo_object->alloc(demo_object->mem_context,
+						     size);
 	if (!node) {
 		Malloc_whine(stdout, size);
 		return 1;
 	}
 
 	size = 1 + strlen(buf);
-	node->data = (char *)foo->alloc(foo->mem_context, size);
+	node->data = (char *)demo_object->alloc(demo_object->mem_context, size);
 	if (!node->data) {
 		Malloc_whine(stdout, size);
-		foo->free(foo->mem_context, node);
+		demo_object->free(demo_object->mem_context, node);
 		return 1;
 	}
-	node->next = foo->list;
-	foo->list = node;
-	foo->num++;
+	node->next = demo_object->list;
+	demo_object->list = node;
+	demo_object->num++;
 
 	return 0;
 }
 
-int foo_b(foo_s *foo)
+int demo_object_b(demo_object_s *demo_object)
 {
-	assert(foo);
+	assert(demo_object);
 
-	foo_list_s *node = foo->list;
+	demo_object_list_s *node = demo_object->list;
 	if (node) {
-		foo->list = node->next;
-		foo->free(foo->mem_context, node->data);
-		foo->free(foo->mem_context, node);
+		demo_object->list = node->next;
+		demo_object->free(demo_object->mem_context, node->data);
+		demo_object->free(demo_object->mem_context, node);
 	}
-	foo->num--;
+	demo_object->num--;
 	return 0;
 
 }
 
 /* constructors */
-foo_s *foo_new(void)
+demo_object_s *demo_object_new(void)
 {
-	return foo_new_custom_allocator(NULL, NULL, NULL);
+	return demo_object_new_custom_allocator(NULL, NULL, NULL);
 }
 
-foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
-				context_free_func c_free, void *mem_context)
+demo_object_s *demo_object_new_custom_allocator(context_malloc_func c_alloc,
+						context_free_func c_free,
+						void *mem_context)
 {
 	assert((c_alloc != NULL && c_free != NULL)
 	       || (c_alloc == NULL && c_free == NULL));
@@ -84,39 +87,40 @@ foo_s *foo_new_custom_allocator(context_malloc_func c_alloc,
 		mem_context = NULL;
 	}
 
-	size_t size = sizeof(foo_s);
-	foo_s *foo = (foo_s *)c_alloc(mem_context, size);
-	if (!foo) {
+	size_t size = sizeof(demo_object_s);
+	demo_object_s *demo_object =
+	    (demo_object_s *)c_alloc(mem_context, size);
+	if (!demo_object) {
 		Malloc_whine(stdout, size);
 		return NULL;
 	}
 
-	foo->list = NULL;
-	foo->num = 0;
+	demo_object->list = NULL;
+	demo_object->num = 0;
 
-	foo->alloc = c_alloc;
-	foo->free = c_free;
-	foo->mem_context = mem_context;
+	demo_object->alloc = c_alloc;
+	demo_object->free = c_free;
+	demo_object->mem_context = mem_context;
 
-	return foo;
+	return demo_object;
 }
 
 /* destructors */
-void foo_free(foo_s *foo)
+void demo_object_free(demo_object_s *demo_object)
 {
-	if (!foo) {
+	if (!demo_object) {
 		return;
 	}
 
-	context_free_func c_free = foo->free;
-	void *mem_context = foo->mem_context;
+	context_free_func c_free = demo_object->free;
+	void *mem_context = demo_object->mem_context;
 
-	while (foo->list != NULL) {
-		foo_list_s *node = foo->list;
-		foo->list = node->next;
-		foo->free(foo->mem_context, node->data);
+	while (demo_object->list != NULL) {
+		demo_object_list_s *node = demo_object->list;
+		demo_object->list = node->next;
+		demo_object->free(demo_object->mem_context, node->data);
 		c_free(mem_context, node);
 	}
 
-	c_free(mem_context, foo);
+	c_free(mem_context, demo_object);
 }

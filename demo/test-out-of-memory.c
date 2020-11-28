@@ -28,7 +28,7 @@ int test_out_of_memory_loop(unsigned long malloc_fail_bitmask)
 	context_malloc_func ctx_alloc;
 	context_free_func ctx_free;
 	oom_injecting_context_s mctx;
-	foo_s *foo;
+	demo_object_s *demo_object;
 	int rv_err;
 
 	ctx_alloc = oom_injecting_malloc;
@@ -37,8 +37,9 @@ int test_out_of_memory_loop(unsigned long malloc_fail_bitmask)
 
 	mctx.attempts_to_fail_bitmask = malloc_fail_bitmask;
 
-	foo = foo_new_custom_allocator(ctx_alloc, ctx_free, &mctx);
-	if (!foo) {
+	demo_object =
+	    demo_object_new_custom_allocator(ctx_alloc, ctx_free, &mctx);
+	if (!demo_object) {
 		++err;
 		if (!malloc_fail_bitmask) {
 			logerror("new returned NULL, but bitmask: %lu",
@@ -50,22 +51,22 @@ int test_out_of_memory_loop(unsigned long malloc_fail_bitmask)
 
 	loops = 5;
 	for (i = 0; i < 5; ++i) {
-		rv_err = foo_a(foo);
+		rv_err = demo_object_a(demo_object);
 		if (rv_err) {
 			++err;
 			if (!malloc_fail_bitmask) {
 				logerror
-				    ("foo_a failed on %lu, but bitmask: 0x%lx",
+				    ("demo_object_a failed on %lu, but bitmask: 0x%lx",
 				     (unsigned long)i, malloc_fail_bitmask);
 				++failures;
 			}
 		}
-		rv_err = foo_b(foo);
+		rv_err = demo_object_b(demo_object);
 		if (rv_err) {
 			++err;
 			if (!malloc_fail_bitmask) {
 				logerror
-				    ("foo_b failed on %lu, but bitmask: 0x%lx",
+				    ("demo_object_b failed on %lu, but bitmask: 0x%lx",
 				     (unsigned long)i, malloc_fail_bitmask);
 				++failures;
 			}
@@ -82,7 +83,7 @@ int test_out_of_memory_loop(unsigned long malloc_fail_bitmask)
 	}
 
 end_test_out_of_memory:
-	foo_free(foo);
+	demo_object_free(demo_object);
 
 	if (mctx.frees != mctx.allocs) {
 		logerror("frees != allocs (%lu != %lu)", mctx.frees,
@@ -105,21 +106,22 @@ int test_destroy_cleanup(void)
 	context_malloc_func ctx_alloc;
 	context_free_func ctx_free;
 	oom_injecting_context_s mctx;
-	foo_s *foo;
+	demo_object_s *demo_object;
 
 	ctx_alloc = oom_injecting_malloc;
 	ctx_free = oom_injecting_free;
 	oom_injecting_context_init(&mctx);
 
-	foo = foo_new_custom_allocator(ctx_alloc, ctx_free, &mctx);
+	demo_object =
+	    demo_object_new_custom_allocator(ctx_alloc, ctx_free, &mctx);
 
-	failures += foo_a(foo);
-	failures += foo_a(foo);
-	failures += foo_a(foo);
+	failures += demo_object_a(demo_object);
+	failures += demo_object_a(demo_object);
+	failures += demo_object_a(demo_object);
 
-	failures += foo_b(foo);
+	failures += demo_object_b(demo_object);
 
-	foo_free(foo);
+	demo_object_free(demo_object);
 
 	if (mctx.frees != mctx.allocs) {
 		logerror("frees != allocs (%lu != %lu)", mctx.frees,
@@ -139,13 +141,13 @@ int test_destroy_cleanup(void)
 int test_default_constuctor_destructor(void)
 {
 	int failures = 0;
-	foo_s *foo = NULL;
-	foo = foo_new();
-	if (!foo) {
+	demo_object_s *demo_object = NULL;
+	demo_object = demo_object_new();
+	if (!demo_object) {
 		return 1;
 	}
 
-	foo_free(foo);
+	demo_object_free(demo_object);
 
 	return failures;
 }
