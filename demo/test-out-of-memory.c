@@ -2,7 +2,7 @@
 /* test-out-of-memory.c */
 /* Copyright (C) 2016, 2019, 2020 Eric Herman <eric@freesa.org> */
 
-#include <foo.h>
+#include "demo-object.h"
 #include <oom-injecting-malloc.h>
 
 #include <stdio.h>

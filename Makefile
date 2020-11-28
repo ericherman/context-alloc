@@ -28,13 +28,13 @@ test-out-of-memory: demo/test-out-of-memory.c \
 			util/oom-injecting-malloc.h \
 			util/oom-injecting-malloc.c \
 			demo/malloc-whine.h \
-			demo/foo.h \
-			demo/foo.c
+			demo/demo-object.h \
+			demo/demo-object.c
 	$(CC) $(CFLAGS) \
 		-I./src -I./util -I./demo \
 		src/context-alloc.c \
 		util/oom-injecting-malloc.c \
-		demo/foo.c \
+		demo/demo-object.c \
 		demo/test-out-of-memory.c \
 		-o test-out-of-memory \
 		--coverage
@@ -46,7 +46,7 @@ html-report: line-cov
 	genhtml coverage.info --output-directory coverage_html
 
 coverage: html-report
-	$(BROWSER) ./coverage_html/demo/foo.c.gcov.html
+	$(BROWSER) ./coverage_html/demo/demo-object.c.gcov.html
 
 clean:
 	rm -rf `cat .gitignore | sed -e 's/#.*//'`
